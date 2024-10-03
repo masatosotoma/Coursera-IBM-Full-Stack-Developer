@@ -1,0 +1,31 @@
+body {
+  margin: 10px;
+  background-color: black;
+}
+
+#home {
+  margin: -1;
+  padding-bottom: 2cm;
+  background-color: magenta;
+}
+
+header {
+  font-size: 30px;
+  color: purple;
+  float: left;
+  padding-left: 2cm;
+}
+
+nav button {
+  color: lightgray;
+  background-color: purple;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 1mm;
+  font-size: 20px;
+}
+
+section {
+  align-items: center;
+  display: grid;
+}

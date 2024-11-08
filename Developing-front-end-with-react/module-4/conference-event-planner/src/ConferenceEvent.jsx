@@ -62,6 +62,7 @@ const ConferenceEvent = () => {
     return totalCost;
   };
   const venueTotalCost = calculateTotalCost("venue");
+  const avTotalCost = calculateTotalCost("av");
 
   const navigateToProducts = (idType) => {
     if (idType == "#venue" || idType == "#addons" || idType == "#meals") {
@@ -210,7 +211,7 @@ const ConferenceEvent = () => {
                   </div>
                 ))}
               </div>
-              <div className="total_cost">Total Cost:</div>
+              <div className="total_cost">Total Cost: {avTotalCost}</div>
             </div>
 
             {/* Meal Section */}

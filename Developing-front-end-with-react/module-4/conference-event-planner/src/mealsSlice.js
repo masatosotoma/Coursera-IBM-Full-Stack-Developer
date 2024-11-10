@@ -8,7 +8,6 @@ export const mealsSlice = createSlice({
     { name: "High Tea", cost: 25, selected: false },
     { name: "Lunch", cost: 65, selected: false },
     { name: "Dinner", cost: 70, selected: false },
-    Ï,
   ],
   reducers: {
     toggleMealSelection: (state, action) => {

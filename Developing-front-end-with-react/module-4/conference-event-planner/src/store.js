@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import venueReducer from "./venueSlice";
+import venueReducer from "./VenueSlice";
 import avReducer from "./avSlice";
 import mealsReducer from "./mealsSlice";
 

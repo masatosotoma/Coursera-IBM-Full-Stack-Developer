@@ -1,22 +1,16 @@
 import React, { useState } from "react";
 import "./ConferenceEvent.css";
 import TotalCost from "./TotalCost";
+import { toggleMealSelection } from "./mealsSlice";
+import { incrementAvQuantity, decrementAvQuantity } from "./avSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { incrementQuantity, decrementQuantity } from "./venueSlice";
-import { incrementAvQuantity, decrementAvQuantity } from "./avSlice";
-import { toggleMealSelection } from "./mealsSlice";
-
 const ConferenceEvent = () => {
   const [showItems, setShowItems] = useState(false);
   const [numberOfPeople, setNumberOfPeople] = useState(1);
   const venueItems = useSelector((state) => state.venue);
   const avItems = useSelector((state) => state.av);
   const mealsItems = useSelector((state) => state.meals);
-  const totalCosts = {
-    venue: venueTotalCost,
-    av: avTotalCost,
-    meals: mealsTotalCost,
-  };
   const dispatch = useDispatch();
   const remainingAuditoriumQuantity =
     3 -
@@ -33,7 +27,7 @@ const ConferenceEvent = () => {
       venueItems[index].name === "Auditorium Hall (Capacity:200)" &&
       venueItems[index].quantity >= 3
     ) {
-      return; // Prevent further additions
+      return;
     }
     dispatch(incrementQuantity(index));
   };
@@ -43,9 +37,13 @@ const ConferenceEvent = () => {
       dispatch(decrementQuantity(index));
     }
   };
-  const handleIncrementAvQuantity = (index) => {};
+  const handleIncrementAvQuantity = (index) => {
+    dispatch(incrementAvQuantity(index));
+  };
 
-  const handleDecrementAvQuantity = (index) => {};
+  const handleDecrementAvQuantity = (index) => {
+    dispatch(decrementAvQuantity(index));
+  };
 
   const handleMealSelection = (index) => {
     const item = mealsItems[index];
@@ -87,38 +85,6 @@ const ConferenceEvent = () => {
 
   const items = getItemsFromTotalCost();
 
-  const calculateTotalCost = (section) => {
-    let totalCost = 0;
-    if (section === "venue") {
-      venueItems.forEach((item) => {
-        totalCost += item.cost * item.quantity;
-      });
-    } else if (section === "av") {
-      avItems.forEach((item) => {
-        totalCost += item.cost * item.quantity;
-      });
-    } else if (section === "meals") {
-      mealsItems.forEach((item) => {
-        if (item.selected) {
-          totalCost += item.cost * numberOfPeople;
-        }
-      });
-    }
-    return totalCost;
-  };
-  const venueTotalCost = calculateTotalCost("venue");
-  const avTotalCost = calculateTotalCost("av");
-  const mealsTotalCost = calculateTotalCost("meals");
-
-  const navigateToProducts = (idType) => {
-    if (idType == "#venue" || idType == "#addons" || idType == "#meals") {
-      if (showItems) {
-        // Check if showItems is false
-        setShowItems(!showItems); // Toggle showItems to true only if it's currently false
-      }
-    }
-  };
-
   const ItemsDisplay = ({ items }) => {
     console.log(items);
     return (
@@ -156,6 +122,41 @@ const ConferenceEvent = () => {
         </div>
       </>
     );
+  };
+  const calculateTotalCost = (section) => {
+    let totalCost = 0;
+    if (section === "venue") {
+      venueItems.forEach((item) => {
+        totalCost += item.cost * item.quantity;
+      });
+    } else if (section === "av") {
+      avItems.forEach((item) => {
+        totalCost += item.cost * item.quantity;
+      });
+    } else if (section === "meals") {
+      mealsItems.forEach((item) => {
+        if (item.selected) {
+          totalCost += item.cost * numberOfPeople;
+        }
+      });
+    }
+    return totalCost;
+  };
+  const venueTotalCost = calculateTotalCost("venue");
+  const avTotalCost = calculateTotalCost("av");
+  const mealsTotalCost = calculateTotalCost("meals");
+  const navigateToProducts = (idType) => {
+    if (idType == "#venue" || idType == "#addons" || idType == "#meals") {
+      if (showItems) {
+        // Check if showItems is false
+        setShowItems(!showItems); // Toggle showItems to true only if it's currently false
+      }
+    }
+  };
+  const totalCosts = {
+    venue: venueTotalCost,
+    av: avTotalCost,
+    meals: mealsTotalCost,
   };
 
   return (
@@ -307,17 +308,21 @@ const ConferenceEvent = () => {
               </div>
 
               <div className="input-container venue_selection">
-                <label htmlFor="numberOfPeople">
-                  <h3>Number of People:</h3>
-                </label>
-                <input
-                  type="number"
-                  className="input_box5"
-                  id="numberOfPeople"
-                  value={numberOfPeople}
-                  onChange={(e) => setNumberOfPeople(parseInt(e.target.value))}
-                  min="1"
-                />
+                <div className="input-container venue_selection">
+                  <label htmlFor="numberOfPeople">
+                    <h3>Number of People:</h3>
+                  </label>
+                  <input
+                    type="number"
+                    className="input_box5"
+                    id="numberOfPeople"
+                    value={numberOfPeople}
+                    onChange={(e) =>
+                      setNumberOfPeople(parseInt(e.target.value))
+                    }
+                    min="1"
+                  />
+                </div>
               </div>
               <div className="meal_selection">
                 {mealsItems.map((item, index) => (
@@ -346,7 +351,6 @@ const ConferenceEvent = () => {
           <div className="total_amount_detail">
             <TotalCost
               totalCosts={totalCosts}
-              handleClick={handleToggleItems}
               ItemsDisplay={() => <ItemsDisplay items={items} />}
             />
           </div>
